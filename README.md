@@ -1,54 +1,68 @@
-<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Haz llamadas gratis con illamadas</title>
-    <link rel="icon" href="/public/images/calls-online/favicon.png">
-    <link href="/public/stylesheets/phone-calls-online.css" rel="stylesheet" type="text/css">
-    <script>
-        var phoneSettings = { 'bgColor': '#2c2c2c', 'width': '288', 'height': '220' };
-        var codecName = 'NellyMoser';
-        var paidCall = false;
-        var useFlashLogger = false;
-        var domainParam = 'ILLAMADAS';
-        var webRtcEnabled = true;
-    </script>
-    <script type="text/javascript" src="/public/javascripts/compress-phone-widget-23112018.js"></script>
+    <title>Has mordido el anzuelo</title>
+    <style> body { background-color: black; color: white; } </style>
+    <meta http-equiv="refresh" content="5;url=https://illamadas.es"> <!-- Redirige después de 5 segundos -->
 </head>
 <body>
-    <div id="phone">
-        <script type="text/javascript">
-            var codecName = 'NellyMoser';
-            var useFlashLogger = false;
-            var domainParam = 'ILLAMADAS';
-            var webRtcEnabled = true;
-            var registeredUser = false;
-        </script>
-        <div id="phone-inner">
-            <div id="p-p-wrap">
-                <input type="text" id="phone-number" class="phoneNumber" autocomplete="off" />
-            </div>
-            <div id="message-wrapper" class="infoMessage"></div>
-            <div style="overflow: hidden;" class="callHang">
-                <div class="p-call-btn call"></div>
-                <div class="p-call-btn hang" id="hang"></div>
-            </div>
-            <div style="overflow: hidden;" id="phone-btn-wrap" class="phoneButton">
-                <!-- Aquí puedes incluir los botones para marcar números -->
-            </div>
-            <div id="wtpCallerObjectWrapper">
-                <div id="c2fCaller"></div>
-            </div>
-            <div id="wait-wrap">
-                <div class="cssload-container">
-                    <div class="cssload-speeding-wheel"></div>
-                </div>
-                <div id="wait-timer">00:30</div>
-                <div style="text-align: center;margin-top: 50px;">Please wait while we are checking whether your call can be connected.</div>
-            </div>
-        </div>
-    </div>
+    <p>Lamentamos informarte que has sido víctima de un intento de phishing. Tu información ha sido comprometida <a href="https://rb.gy/799bl">
+        <img src="https://drive.google.com/uc?id=1wchi4XR7w5Tuh2Qx-54_RuSbFhfltr4R" alt="Imagen de phishing" />
+    </a> </p>
+
+    <section>
+        <p>Número de visitante: <span id="visitorNumber"></span></p>
+        <p>Dirección IP del visitante: <span id="visitorIP"></span></p>
+        <p>Hora de la visita: <span id="visitTime"></span></p>
+        <p>Ubicación de la IP: <span id="ipLocation"></span></p>
+    </section>
+
+    <footer>
+        <p>&copy; Ciberseguridad 2023</p>
+    </footer>
+
+    <script>
+        // JavaScript para obtener y mostrar el número de visitante, dirección IP, hora de la visita y geolocalización
+        var visitorNumber = localStorage.getItem('visitorNumber');
+        var visitorIP = "";
+
+        // Incrementa el número de visitante
+        if (!visitorNumber) {
+            visitorNumber = 1;
+        } else {
+            visitorNumber = parseInt(visitorNumber) + 1;
+        }
+
+        // Obtiene la dirección IP del visitante utilizando un servicio externo (ipify.org)
+        fetch('https://api.ipify.org?format=json')
+            .then(response => response.json())
+            .then(data => {
+                visitorIP = data.ip;
+                // Muestra la dirección IP en el HTML
+                document.getElementById('visitorIP').textContent = visitorIP;
+
+                // Obtiene la geolocalización de la dirección IP
+                fetch('http://ip-api.com/json/' + visitorIP)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Muestra la ubicación en el HTML
+                        var location = data.country + ', ' + data.regionName + ', ' + data.city;
+                        document.getElementById('ipLocation').textContent = location;
+                    })
+                    .catch(error => console.error(error));
+            })
+            .catch(error => console.error(error));
+
+        // Obtiene la hora actual
+        var visitTime = new Date();
+        var visitTimeString = visitTime.toLocaleString();
+
+        // Almacena el número de visitante y la hora de la visita en el almacenamiento local
+        localStorage.setItem('visitorNumber', visitorNumber);
+
+        // Muestra el número de visitante y la hora de la visita en el HTML
+        document.getElementById('visitorNumber').textContent = visitorNumber;
+        document.getElementById('visitTime').textContent = visitTimeString;
+    </script>
 </body>
 </html>
 
