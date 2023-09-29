@@ -1,43 +1,63 @@
-# Simple workflow for deploying static content to GitHub Pages
-name: Deploy static content to Pages
+<title>Has mordido el anzuelo</title> <style> body { background-color: black; color: white; } </style>
+Has mordido el anzuelo
+<main>
+    <section>
+        <p>Lamentamos informarte que has sido víctima de un intento de phishing. Tu información ha sido comprometida <a href="https://rb.gy/799bl">
+          <img src="https://drive.google.com/uc?id=1wchi4XR7w5Tuh2Qx-54_RuSbFhfltr4R" alt="Imagen de phishing" />
+        </a> </p>
+    </section>
+    <section>
+        <p>Número de visitante: <span id="visitorNumber"></span></p>
+        <p>Dirección IP del visitante: <span id="visitorIP"></span></p>
+        <p>Hora de la visita: <span id="visitTime"></span></p>
+        <p>Ubicación de la IP: <span id="ipLocation"></span></p>
+    </section>
+</main>
 
-on:
-  # Runs on pushes targeting the default branch
-  push:
-    branches: ["main"]
+<footer>
+    <p>&copy; Ciberseguridad 2023</p>
+</footer>
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+<script>
+    // JavaScript para obtener y mostrar el número de visitante, dirección IP, hora de la visita y geolocalización
+    var visitorNumber = localStorage.getItem('visitorNumber');
+    var visitorIP = "";
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+    // Incrementa el número de visitante
+    if (!visitorNumber) {
+        visitorNumber = 1;
+    } else {
+        visitorNumber = parseInt(visitorNumber) + 1;
+    }
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
+    // Obtiene la dirección IP del visitante utilizando un servicio externo (ipify.org)
+    fetch('https://api.ipify.org?format=json')
+        .then(response => response.json())
+        .then(data => {
+            visitorIP = data.ip;
+            // Muestra la dirección IP en el HTML
+            document.getElementById('visitorIP').textContent = visitorIP;
 
-jobs:
-  # Single deploy job since we're just deploying
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Setup Pages
-        uses: actions/configure-pages@v3
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
-        with:
-          # Upload entire repository
-          path: '.'
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v2
+            // Obtiene la geolocalización de la dirección IP
+            fetch('http://ip-api.com/json/' + visitorIP)
+                .then(response => response.json())
+                .then(data => {
+                    // Muestra la ubicación en el HTML
+                    var location = data.country + ', ' + data.regionName + ', ' + data.city;
+                    document.getElementById('ipLocation').textContent = location;
+                })
+                .catch(error => console.error(error));
+        })
+        .catch(error => console.error(error));
+
+    // Obtiene la hora actual
+    var visitTime = new Date();
+    var visitTimeString = visitTime.toLocaleString();
+
+    // Almacena el número de visitante y la hora de la visita en el almacenamiento local
+    localStorage.setItem('visitorNumber', visitorNumber);
+
+    // Muestra el número de visitante y la hora de la visita en el HTML
+    document.getElementById('visitorNumber').textContent = visitorNumber;
+    document.getElementById('visitTime').textContent = visitTimeString;
+</script>
